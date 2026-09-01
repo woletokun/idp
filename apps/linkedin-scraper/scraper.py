@@ -45,12 +45,16 @@ def save_jobs(jobs):
             id SERIAL PRIMARY KEY,
             title TEXT,
             company TEXT,
-            location TEXT
+            location TEXT,
+            CONSTRAINT unique_job_entry UNIQUE (title, company, location)
         )
     """)
     for title, company, location in jobs:
-        cur.execute("INSERT INTO linkedin_jobs (title, company, location) VALUES (%s, %s, %s)",
-                    (title, company, location))
+        cur.execute("""
+            INSERT INTO linkedin_jobs (title, company, location) 
+            VALUES (%s, %s, %s)
+            ON CONFLICT (title, company, location) DO NOTHING
+        """, (title, company, location))
     conn.commit()
     cur.close()
     conn.close()

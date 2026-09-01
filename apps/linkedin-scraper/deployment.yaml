@@ -15,22 +15,10 @@ spec:
     spec:
       containers:
       - name: scraper
-        image: yourdockerhub/linkedin-scraper:latest
-        env:
-        - name: POSTGRES_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: postgres-secret
-              key: POSTGRES_PASSWORD
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: linkedin-scraper
-  namespace: apps
-spec:
-  selector:
-    app: linkedin-scraper
-  ports:
-  - port: 8080
-    targetPort: 8080
+        image: tokstokun/linkedin-scraper:latest   # <-- your actual DockerHub repo
+        imagePullPolicy: Always                   # ensures Kubernetes always fetches the latest
+        imagePullSecrets:
+          - name: regcred
+
+        ports:
+        - containerPort: 8080

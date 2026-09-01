@@ -3,9 +3,11 @@ kind: Ingress
 metadata:
   name: jenkins-ingress
   namespace: jenkins
+  annotations:
+    kubernetes.io/ingress.class: traefik
 spec:
   rules:
-  - host: jenkins.mycluster.local
+  - host: jenkins.172.20.0.2.nip.io
     http:
       paths:
       - path: /
