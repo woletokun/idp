@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: linkedin-scraper
+  namespace: apps
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: linkedin-scraper
+  template:
+    metadata:
+      labels:
+        app: linkedin-scraper
+    spec:
+      containers:
+      - name: scraper
+        image: yourdockerhub/linkedin-scraper:latest
+        env:
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: postgres-secret
+              key: POSTGRES_PASSWORD
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: linkedin-scraper
+  namespace: apps
+spec:
+  selector:
+    app: linkedin-scraper
+  ports:
+  - port: 8080
+    targetPort: 8080
