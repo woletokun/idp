@@ -33,5 +33,21 @@ pipeline {
                 """
             }
         }
+        stage('Job Execution Test') {
+            steps {
+                sh 'kubectl wait --for=condition=complete job/scraper-job -n apps --timeout=120s'
+            }
+        }
+        stage('Log Verification') {
+            steps {
+                sh 'kubectl logs job/scraper-job -n apps | grep "Scraping completed"'
+            }
+        }
+        stage('Image Verification') {
+            steps {
+                sh 'kubectl get pods -n apps -l job-name=scraper-job -o jsonpath="{.items[*].spec.containers[*].image}" | grep woletokun/idp:${env.BUILD_NUMBER}'
+            }
+        }
+
     }
 }
