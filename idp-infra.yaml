@@ -1,17 +1,17 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: idp-app
+  name: idp-infra
   namespace: argocd
 spec:
   project: default
   source:
     repoURL: git@github.com:woletokun/idp.git
     targetRevision: main
-    path: apps
+    path: infra   # points to infra manifests
   destination:
     server: https://kubernetes.default.svc
-    namespace: apps
+    namespace: infra   # deploys into infra namespace
   syncPolicy:
     automated:
       prune: true
