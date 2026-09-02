@@ -3,6 +3,7 @@ import psycopg2
 import redis
 import requests
 from bs4 import BeautifulSoup
+from prometheus_client import start_http_server, Counter, Histogram
 
 # Real Postgres connection info from infra manifests
 POSTGRES_HOST = "postgres.infra.svc.cluster.local"
@@ -12,6 +13,10 @@ POSTGRES_PASSWORD = os.getenv("POSTGRES_PASSWORD", "changeme")  # from Secret
 
 REDIS_HOST = "redis.infra.svc.cluster.local"
 REDIS_PORT = 6379
+
+jobs_run = Counter('scraper_jobs_total', 'Total scraper jobs run')
+jobs_failed = Counter('scraper_jobs_failed_total', 'Total scraper jobs failed')
+job_duration = Histogram('scraper_job_duration_seconds', 'Duration of scraper job')
 
 def connect_postgres():
     return psycopg2.connect(
@@ -60,6 +65,14 @@ def save_jobs(jobs):
     conn.close()
 
 if __name__ == "__main__":
-    jobs = scrape_jobs("DevOps Engineer")
-    save_jobs(jobs)
-    print(f"Saved {len(jobs)} jobs to Postgres")
+    start_http_server(8000)
+    with job_duration.time():
+        try:
+            jobs_run.inc()
+            jobs = scrape_jobs("DevOps Engineer")
+            save_jobs(jobs)
+            print(f"Saved {len(jobs)} jobs to Postgres")
+        except Exception as e:
+            jobs_failed.inc()
+            print(f"Job failed: {e}")
+            raise

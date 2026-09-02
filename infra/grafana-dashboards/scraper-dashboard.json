@@ -1,0 +1,21 @@
+{
+  "title": "LinkedIn Scraper Dashboard",
+  "panels": [
+    {
+      "type": "graph",
+      "title": "Jobs Run vs Failed",
+      "targets": [
+        { "expr": "scraper_jobs_total" },
+        { "expr": "scraper_jobs_failed_total" }
+      ]
+    },
+    {
+      "type": "logs",
+      "title": "Scraper Logs",
+      "datasource": "Loki",
+      "targets": [
+        { "expr": "{job=\"scraper-job\"}" }
+      ]
+    }
+  ]
+}

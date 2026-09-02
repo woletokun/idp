@@ -1,8 +1,13 @@
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: linkedin-scraper
+  name: scraper-job
   namespace: apps
+  labels:
+    app: linkedin-scraper
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "8000"
 spec:
   schedule: "0 0 * * *"   # every day at midnight
   timeZone: Africa/Lagos  # run at local midnight
