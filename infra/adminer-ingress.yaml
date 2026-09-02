@@ -3,9 +3,9 @@ kind: Ingress
 metadata:
   name: adminer
   namespace: apps
-  annotations:
-    kubernetes.io/ingress.class: traefik   # or traefik, depending on your ingress controller
+
 spec:
+  ingressClassName: traefik
   rules:
   - host: adminer.mycluster.local
     http:
