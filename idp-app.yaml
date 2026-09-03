@@ -24,7 +24,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: 'https://github.com/woletokun/idp.git'
+    repoURL: git@github.com/woletokun/idp.git
     targetRevision: main
     path: apps/linkedin-scraper
   destination:
