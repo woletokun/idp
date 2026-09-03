@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: scraper-job
+  name: linkedin-scraper
   namespace: apps
   labels:
     app: linkedin-scraper
@@ -17,7 +17,8 @@ spec:
         spec:
           containers:
           - name: scraper
-            image: tokstokun/linkedin-scraper:latest
+            image: ghcr.io/woletokun/idp:latest
+            command: ["python", "scraper.py"]
             imagePullPolicy: Always
             env:
             - name: POSTGRES_USER
@@ -40,4 +41,4 @@ spec:
                 secretKeyRef:
                   name: postgres-secret
                   key: POSTGRES_PASSWORD
-          restartPolicy: Never
+          restartPolicy: OnFailure
