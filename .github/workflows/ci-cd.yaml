@@ -29,6 +29,9 @@ jobs:
       run: |
         echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
         docker push ghcr.io/woletokun/idp:latest
+
+    - name: Prepare kubeconfig
+      run: mkdir -p $HOME/.kube
     
     - name: Set up kubeconfig
       run: |
