@@ -23,7 +23,7 @@ jobs:
       run: pytest apps/linkedin-scraper/tests/
 
     - name: Build Docker image
-      run: docker build -t ghcr.io/woletokun/idp:latest idp/apps/linkedin-scraper/
+      run: docker build -t ghcr.io/woletokun/idp:latest apps/linkedin-scraper/Dockerfile .
 
     - name: Push Docker image
       run: |
