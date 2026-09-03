@@ -17,6 +17,7 @@ REDIS_PORT = 6379
 jobs_run = Counter('scraper_jobs_total', 'Total scraper jobs run')
 jobs_failed = Counter('scraper_jobs_failed_total', 'Total scraper jobs failed')
 job_duration = Histogram('scraper_job_duration_seconds', 'Duration of scraper job')
+jobs_saved = Counter('jobs_saved_total', 'Total jobs saved to Postgres')
 
 def connect_postgres():
     return psycopg2.connect(
@@ -71,6 +72,7 @@ if __name__ == "__main__":
             jobs_run.inc()
             jobs = scrape_jobs("DevOps Engineer")
             save_jobs(jobs)
+            jobs_saved.inc(len(jobs))
             print(f"Saved {len(jobs)} jobs to Postgres")
         except Exception as e:
             jobs_failed.inc()
